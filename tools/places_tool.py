@@ -6,10 +6,10 @@ Reads places.json and recommends attractions based on city, type, and rating.
 import json
 import os
 from langchain.tools import tool
-
+import streamlit as st
 DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "places.json")
 
-
+@st.cache_data
 def load_places() -> list:
     """Load places dataset from JSON file."""
     with open(DATA_PATH, "r") as f:
