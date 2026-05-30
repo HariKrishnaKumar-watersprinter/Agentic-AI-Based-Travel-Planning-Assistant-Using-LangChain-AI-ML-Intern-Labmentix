@@ -602,7 +602,7 @@ with tab4:
     | Component | Technology |
     |-----------|-----------|
     | AI Framework | LangChain (Tool-Calling Agent) |
-    | Language Model | Claude (Anthropic) |
+    | Language Model | GLM 4.5 Flash |
     | UI Framework | Streamlit |
     | Data | Custom JSON datasets (flights, hotels, places) |
     | Weather | Open-Meteo API (free, no key needed) |
