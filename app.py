@@ -28,30 +28,40 @@ st.set_page_config(
 )
 
 # ──────────────────────────────────────────────────────────────
-# Cached tool runners  (avoid re-calling on every Streamlit rerun)
+# Cached tool runners
+# All args are explicitly cast to primitive types so the cache
+# key is always consistent — prevents Streamlit's "Clear caches"
+# dialog from appearing.
 # ──────────────────────────────────────────────────────────────
 @st.cache_data(show_spinner=False)
 def cached_search_flights(origin: str, destination: str) -> str:
     return search_flights.invoke(f"{origin} to {destination}")
 
 @st.cache_data(show_spinner=False)
-def cached_get_weather(weather_q) -> str:
-    return get_weather.invoke(weather_q)
+def cached_get_weather(destination: str, duration: int, start_date: str = "") -> str:
+    """Takes city, days, and an optional ISO date string (YYYY-MM-DD) for travel date."""
+    q = f"{str(destination)}, days={int(duration)}"
+    if start_date:
+        q += f", start_date={start_date}"
+    return get_weather.invoke(q)
 
 @st.cache_data(show_spinner=False)
 def cached_recommend_hotels(destination: str, max_budget: int) -> str:
-    return recommend_hotels.invoke(f"{destination}, max_price={max_budget}")
+    return recommend_hotels.invoke(f"{str(destination)}, max_price={int(max_budget)}")
 
 @st.cache_data(show_spinner=False)
 def cached_discover_places(destination: str) -> str:
-    return discover_places.invoke(destination)
+    return discover_places.invoke(str(destination))
 
 @st.cache_data(show_spinner=False)
 def cached_estimate_budget(destination: str, duration: int,
                             flight_price: float, hotel_price: float,
                             travel_style: str) -> str:
-    q = (f"{destination}, days={duration}, flight_price={flight_price}, "
-         f"hotel_price={hotel_price}, style={travel_style}")
+    # Normalise to consistent hashable types — prevents cache invalidation
+    q = (f"{str(destination)}, days={int(duration)}, "
+         f"flight_price={round(float(flight_price), 2)}, "
+         f"hotel_price={round(float(hotel_price), 2)}, "
+         f"style={str(travel_style)}")
     return estimate_budget.invoke(q)
 
 # ──────────────────────────────────────────────────────────────
@@ -124,7 +134,7 @@ CITIES = ["Delhi", "Mumbai", "Goa", "Bangalore", "Chennai",
           "Hyderabad", "Kolkata", "Jaipur"]
 
 # ──────────────────────────────────────────────────────────────
-# Sidebar — Quick Tools only (config moved into Tab 2)
+# Sidebar — Quick Tools
 # ──────────────────────────────────────────────────────────────
 with st.sidebar:
     st.header("🔎 Quick Tools")
@@ -136,8 +146,9 @@ with st.sidebar:
     col1, col2 = st.columns(2)
     with col1:
         if st.button("🏨 Hotels"):
+            # Cast to int — number_input returns float
             st.session_state["quick_result"] = cached_recommend_hotels(
-                quick_city, quick_max_budget)
+                quick_city, int(quick_max_budget))
     with col2:
         if st.button("📍 Places"):
             st.session_state["quick_result"] = cached_discover_places(quick_city)
@@ -349,45 +360,36 @@ with tab2:
 
     st.header("⚙️ Trip Configuration")
 
-    col1, col2,col3, col4,col5,col6  = st.columns(6)
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
     with col1:
         t2_origin = st.selectbox("🛫 Departure City", CITIES, index=4, key="t2_origin")
     with col2:
         t2_destination = st.selectbox("🛬 Destination City", CITIES, index=2, key="t2_dest")
-
-    # ── Date picker: user must explicitly tick + pick ──────────
-    #date_enabled = st.checkbox("📆 Select a Travel Date", value=False,help="Tick this first, then pick your date.")
-    #if date_enabled:
-   # = st.columns(2)
-    
     with col3:
-       #st.markdown('📆Departure Date')
-       travel_date = st.date_input("📆Departure Date",
-                value=datetime.date.today(),
-                min_value=datetime.date.today(),
-                max_value=datetime.date.today() + datetime.timedelta(days=365),
-                )
-    #st.caption(f"✅ Departing on **{travel_date.strftime('%A, %d %b %Y')}**")
-    #else:
-        #travel_date = None
-        #st.caption("⬆️ Tick the checkbox above to choose your departure date.")
+        travel_date = st.date_input(
+            "📆 Departure Date",
+            value=None,                  # ← no auto-selection; user must pick
+            min_value=datetime.date.today(),
+            max_value=datetime.date.today() + datetime.timedelta(days=365),
+        )
     with col4:
-        t2_duration     = st.slider("📅 Trip Duration (days)", 1, 7, 3, key="t2_dur")
+        t2_duration = st.slider("📅 Trip Duration (days)", 1, 7, 3, key="t2_dur")
     with col5:
-        t2_style        = st.radio("💼 Travel Style", ["budget", "mid", "luxury"],
-                                index=1, horizontal=False, key="t2_style")
+        t2_style = st.radio("💼 Travel Style", ["budget", "mid", "luxury"],
+                             index=1, horizontal=False, key="t2_style")
     with col6:
-        t2_max_budget   = st.number_input("💰 Max Hotel Price/Night(₹)", 500, 10000,
-                                       4000, 500, key="t2_budget")
-    custom_note     = st.text_input("📝 Any special preferences?",
-                                     placeholder="e.g., love beaches and local food, no museums")
+        t2_max_budget = st.number_input("💰 Max Hotel Price/Night (₹)", 500, 10000,
+                                         4000, 500, key="t2_budget")
+
+    custom_note = st.text_input("📝 Any special preferences?",
+                                 placeholder="e.g., love beaches and local food, no museums")
 
     if st.button("✨ Generate Itinerary", type="primary"):
         # ── Validation ─────────────────────────────────────────
         if t2_origin == t2_destination:
             st.error("🚫 Departure and destination cities must be different.")
         elif travel_date is None:
-            st.error("📆 Please tick 'Select a Travel Date' and choose your departure date before generating.")
+            st.error("📆 Please select a departure date before generating your itinerary.")
         else:
             with st.spinner("🤖 Your AI travel agent is planning your trip..."):
                 progress = st.progress(0)
@@ -410,21 +412,23 @@ with tab2:
 
                 status.info("🌤️ Fetching weather forecast...")
                 progress.progress(35)
-                weather_q = f"{t2_destination}, days={t2_duration}"
-                if travel_date:
-                    weather_q += f", date={travel_date.isoformat()}"
-                weather_result = cached_get_weather(weather_q)
+                # Pass travel_date so forecast starts on the user's chosen date
+                weather_result = cached_get_weather(
+                    t2_destination,
+                    int(t2_duration),
+                    travel_date.isoformat(),   # e.g. "2026-06-19"
+                )
 
                 status.info("🏨 Finding best hotels...")
                 progress.progress(55)
-                hotel_result = cached_recommend_hotels(t2_destination, t2_max_budget)
+                hotel_result = cached_recommend_hotels(t2_destination, int(t2_max_budget))
 
-                hotel_price = float(t2_max_budget)
+                hotel_price = round(float(t2_max_budget), 2)
                 for line in hotel_result.split("\n"):
                     if "Price/Night" in line and "₹" in line:
                         try:
-                            hotel_price = float(
-                                line.split("₹")[1].replace(",", "").strip())
+                            hotel_price = round(float(
+                                line.split("₹")[1].replace(",", "").strip()), 2)
                             break
                         except Exception:
                             pass
@@ -436,8 +440,12 @@ with tab2:
                 status.info("💰 Calculating budget...")
                 progress.progress(85)
                 budget_result = cached_estimate_budget(
-                    t2_destination, t2_duration,
-                    flight_price, hotel_price, t2_style)
+                    t2_destination,
+                    int(t2_duration),
+                    round(float(flight_price), 2),
+                    round(float(hotel_price), 2),
+                    str(t2_style),
+                )
 
                 progress.progress(100)
                 status.empty()
@@ -446,9 +454,9 @@ with tab2:
             st.success("✅ Your itinerary is ready!")
 
             col_a, col_b, col_c, col_d = st.columns(4)
-            col_a.metric("Destination",   t2_destination, f"{t2_duration} Days")
+            col_a.metric("Destination",    t2_destination, f"{t2_duration} Days")
             col_b.metric("Departure Date", travel_date.strftime("%d %b %Y"))
-            col_c.metric("Travel Style",  t2_style.title())
+            col_c.metric("Travel Style",   t2_style.title())
             if flight_price > 0:
                 col_d.metric("Flight Price", f"₹{flight_price:,.0f}")
 
@@ -533,7 +541,7 @@ with tab3:
         if st.button("Find Hotels"):
             with st.spinner("Searching..."):
                 st.text(recommend_hotels.invoke(
-                    f"{h_city}, stars={h_stars}, max_price={h_price}"))
+                    f"{h_city}, stars={h_stars}, max_price={int(h_price)}"))
 
     elif tool_choice == "Places Discovery":
         p_city   = st.selectbox("City", CITIES, key="p_city")
@@ -546,15 +554,15 @@ with tab3:
                 if p_type != "Any":
                     q += f", type={p_type}"
                 q += f", min_rating={p_rating}"
-                st.text(cached_discover_places(q) if p_type == "Any" and p_rating == 4.0
-                        else discover_places.invoke(q))
+                st.text(discover_places.invoke(q))
 
     elif tool_choice == "Weather Lookup":
         w_city = st.selectbox("City", CITIES, key="w_city")
         w_days = st.slider("Forecast Days", 1, 7, 5)
         if st.button("Get Weather"):
             with st.spinner("Fetching weather..."):
-                st.text(cached_get_weather(w_city, w_days))
+                # Pass (str, int) matching the fixed cached_get_weather signature
+                st.text(cached_get_weather(w_city, int(w_days)))
 
     elif tool_choice == "Budget Calculator":
         bc_city   = st.selectbox("Destination", CITIES, key="bc_city")
@@ -564,7 +572,12 @@ with tab3:
         bc_style  = st.radio("Style", ["budget", "mid", "luxury"], key="bc_style")
         if st.button("Calculate Budget"):
             st.text(cached_estimate_budget(
-                bc_city, bc_days, bc_flight, bc_hotel, bc_style))
+                bc_city,
+                int(bc_days),
+                round(float(bc_flight), 2),
+                round(float(bc_hotel), 2),
+                str(bc_style),
+            ))
 
 
 # ── TAB 4: About ──────────────────────────────────────────────
