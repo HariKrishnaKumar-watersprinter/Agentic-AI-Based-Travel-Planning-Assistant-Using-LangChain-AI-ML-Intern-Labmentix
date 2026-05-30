@@ -139,9 +139,7 @@ CITIES = ["Delhi", "Mumbai", "Goa", "Bangalore", "Chennai",
 #with st.sidebar:
    # st.header("🔎 Quick Tools")
   #  quick_city = st.selectbox("City", CITIES, index=2)
-  #  quick_max_budget = st.number_input("Max Price/Night (₹)", min_value=500,
-                                       max_value=10000, value=4000, step=500,
-                                       key="sidebar_budget")
+  #  quick_max_budget = st.number_input("Max Price/Night (₹)", min_value=500, max_value=10000, value=4000, step=500,  key="sidebar_budget")
 
   #  col1, col2 = st.columns(2)
  #   with col1:
