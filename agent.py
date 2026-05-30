@@ -18,6 +18,7 @@ from tools.hotel_tool import recommend_hotels
 from tools.places_tool import discover_places
 from tools.weather_tool import get_weather
 from tools.budget_tool import estimate_budget
+import streamlit as st
 # ──────────────────────────────────────────────────────────────
 # System Prompt
 # ──────────────────────────────────────────────────────────────
