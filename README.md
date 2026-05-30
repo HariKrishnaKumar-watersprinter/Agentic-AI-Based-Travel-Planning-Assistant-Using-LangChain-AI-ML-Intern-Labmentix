@@ -118,10 +118,7 @@ cd travel_agent
 # Install dependencies
 pip install -r requirements.txt
 
-# Set your Anthropic API key
-export ANTHROPIC_API_KEY=sk-ant-...   # Linux/Mac
-set ANTHROPIC_API_KEY=sk-ant-...      # Windows CMD
-```
+
 
 ### Run the Streamlit App
 
@@ -173,7 +170,7 @@ Delhi · Mumbai · Goa · Bangalore · Chennai · Hyderabad · Kolkata · Jaipur
 | API | Purpose | Auth Required |
 |-----|---------|--------------|
 | [Open-Meteo](https://open-meteo.com) | Live weather forecasts | ❌ None |
-| [Anthropic Claude](https://anthropic.com) | AI reasoning + tool calling | ✅ API Key |
+| [GLM](https://chat.z.ai/) | AI reasoning + tool calling | ✅ API Key |
 
 ---
 
