@@ -197,4 +197,18 @@ To add a new tool:
 - [LangChain Documentation](https://docs.langchain.com/)
 - [Streamlit Documentation](https://docs.streamlit.io/)
 - [Open-Meteo API](https://open-meteo.com/en/docs)
-- [Anthropic Claude API](https://docs.anthropic.com/)
+- [GLM API](https://chat.z.ai/)
+
+## 🎤 Author
+
+**Hari Krishna Kumar -AI,ML,Data Science & Analytics Enthusiast**
+
+---
+## 📬 Contact
+
+For collaboration or queries:
+
+* LinkedIn: *[www.linkedin.com/in/hari-668364112]*
+* Email: *[harikrishnakumar368@gmail.com]*
+
+---
