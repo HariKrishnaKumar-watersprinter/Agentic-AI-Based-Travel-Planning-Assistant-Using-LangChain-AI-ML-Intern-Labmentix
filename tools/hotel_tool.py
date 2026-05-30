@@ -3,14 +3,14 @@ Hotel Recommendation Tool
 Reads hotels.json and filters by city, star rating, and price.
 Returns top hotel options ranked by value.
 """
-
+import streamlit as st
 import json
 import os
 from langchain.tools import tool
 
 DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "hotels.json")
 
-
+@st.cache_data
 def load_hotels() -> list:
     """Load hotels dataset from JSON file."""
     with open(DATA_PATH, "r") as f:
