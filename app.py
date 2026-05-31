@@ -34,8 +34,8 @@ st.set_page_config(
 # dialog from appearing.
 # ──────────────────────────────────────────────────────────────
 @st.cache_data(show_spinner=False)
-def cached_search_flights(origin: str, destination: str,date:str) -> str:
-    return search_flights.invoke(f"{origin} to {destination},{date}")
+def cached_search_flights(origin: str, destination: str) -> str:
+    return search_flights.invoke(f"{origin} to {destination}")
 
 @st.cache_data(show_spinner=False)
 def cached_get_weather(destination: str, duration: int, start_date: str = "") -> str:
