@@ -55,7 +55,7 @@ Always produce a final answer in this structure:
 ✈️ FLIGHT SELECTED
 ------------------
 [Flight details from tool]
-
+[Directly insert the complete output from the search_flights here, preserving its original formatting.follow this formatting strictly]
 🏨 HOTEL RECOMMENDATION
 -----------------------
 [show all hotel details from tool for the distination cities also provide the recommendation ]
