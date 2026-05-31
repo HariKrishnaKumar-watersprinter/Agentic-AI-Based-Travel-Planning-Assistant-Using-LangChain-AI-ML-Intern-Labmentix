@@ -16,7 +16,7 @@ def search_flights(query: str) -> str:
     Example: "Delhi to Mumbai"
     """
     try:
-        from_city, to_city = [c.strip() for c in query.split(" to ")]
+        from_city, to_city, Date = [c.strip() for c in query.split(" to ")]
     except ValueError:
         return "Invalid query format. Please use 'FROM_CITY to TO_CITY'."
 
@@ -53,6 +53,7 @@ def search_flights(query: str) -> str:
 
     result = (
         f"✈️ Cheapest Flight from {from_city} to {to_city}:\n"
+        f"Date : {Date}
         f"  Airline: {cheapest_flight['airline']}\n"
         f"  Departure: {formatted_departure_time}\n"
         f"  Arrival: {formatted_arrival_time}\n"
