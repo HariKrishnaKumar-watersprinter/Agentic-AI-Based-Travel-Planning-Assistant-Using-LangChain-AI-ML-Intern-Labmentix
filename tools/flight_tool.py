@@ -53,7 +53,7 @@ def search_flights(query: str) -> str:
 
     result = (
         f"✈️ Cheapest Flight from {from_city} to {to_city} \n\n"
-        f" Flight Date : {Date}\n\n"
+        f"  Flight Date : {Date}\n\n"
         f"  Flight ID: {cheapest_flight['flight_id']}\n\n"
         f"  Airline: {cheapest_flight['airline']}\n\n"
         f"  Departure: {formatted_departure_time}\n\n"
