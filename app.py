@@ -125,7 +125,7 @@ st.markdown("""
 <div class="main-header">
     <h1>✈️ AI Travel Planning Assistant</h1>
     <p style="font-size:1.1rem; opacity:0.9;">
-        Powered by LangChain & Google Gemini — Your intelligent travel companion for India
+        Powered by LangChain — Your intelligent travel companion for India
     </p>
 </div>
 """, unsafe_allow_html=True)
