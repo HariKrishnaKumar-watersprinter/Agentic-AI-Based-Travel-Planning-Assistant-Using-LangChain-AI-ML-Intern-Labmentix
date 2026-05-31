@@ -48,7 +48,7 @@ WMO_DESCRIPTIONS = {
 # Open-Meteo supports forecasts up to 16 days ahead and
 # historical data via the archive API. For dates beyond 16 days
 # we use monthly climate averages as a fallback.
-MAX_FORECAST_DAYS = 13
+MAX_FORECAST_DAYS = 16
 
 # Monthly climate normals (avg high / avg low °C) for each city
 CLIMATE_NORMALS = {
