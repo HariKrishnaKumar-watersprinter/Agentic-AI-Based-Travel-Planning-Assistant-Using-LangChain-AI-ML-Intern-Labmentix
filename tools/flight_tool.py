@@ -11,14 +11,21 @@ FLIGHTS_DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "fligh
 @tool
 def search_flights(query: str) -> str:
     """
-    Searches for flights between two cities.
-    Input format: "FROM_CITY to TO_CITY"
-    Example: "Delhi to Mumbai"
+    Searches for flights between two Indian cities.
+    Input format: "FROM_CITY to TO_CITY to DATE"
+    Example: "Delhi to Mumbai to 2026-06-15"
     """
     try:
-        from_city, to_city, Date = [c.strip() for c in query.split(" to ")]
+        parts = [c.strip() for c in query.split(" to ")]
+        if len(parts) == 3:
+            from_city, to_city, Date = parts
+        elif len(parts) == 2:
+            from_city, to_city = parts
+            Date = "Flexible"
+        else:
+            raise ValueError
     except ValueError:
-        return "Invalid query format. Please use 'FROM_CITY to TO_CITY'."
+        return "Invalid query format. Please use 'FROM_CITY to TO_CITY to YYYY-MM-DD'."
 
     try:
         with open(FLIGHTS_DATA_PATH, 'r') as f:
@@ -53,12 +60,12 @@ def search_flights(query: str) -> str:
 
     result = (
         f"✈️ Cheapest Flight from {from_city} to {to_city} \n\n"
-        f"  - Flight Date : {Date}\n\n"
-        f"  - Flight ID: {cheapest_flight['flight_id']}\n\n"
-        f"  - Airline: {cheapest_flight['airline']}\n\n"
-        f"  - Departure: {formatted_departure_time}\n\n"
-        f"  - Arrival: {formatted_arrival_time}\n\n"
-        f"  - Price: ₹{cheapest_flight['price']:,.0f}"
+        f" - Flight Date : {Date}\n\n"
+        f" - Flight ID: {cheapest_flight['flight_id']}\n\n"
+        f" - Airline: {cheapest_flight['airline']}\n\n"
+        f" - Departure: {formatted_departure_time}\n\n"
+        f" - Arrival: {formatted_arrival_time}\n\n"
+        f" - Price: ₹{cheapest_flight['price']:,.0f}"
        
     )
     return result
