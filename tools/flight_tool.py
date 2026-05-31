@@ -21,7 +21,7 @@ def search_flights(query: str) -> str:
             from_city, to_city, Date = parts
         elif len(parts) == 2:
             from_city, to_city = parts
-            Date = "Flexible"
+            Date = datetime.date.today()
         else:
             raise ValueError
     except ValueError:
