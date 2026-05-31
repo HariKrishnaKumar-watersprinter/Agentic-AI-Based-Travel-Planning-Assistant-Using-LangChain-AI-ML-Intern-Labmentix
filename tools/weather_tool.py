@@ -184,10 +184,10 @@ def get_weather(query: str) -> str:
         return (
             f"⚠️  Weather API unavailable.\n"
             f"Typical weather for {city_name}:\n"
-            f"  - Summer (Apr–Jun): 35–42°C in north India, 30–35°C in south.\n"
-            f"  - Monsoon (Jul–Sep): heavy rain, 25–32°C.\n"
-            f"  - Winter (Nov–Feb): 10–25°C across India.\n"
-            f"  - Please check https://open-meteo.com for live forecasts."
+            f"  Summer (Apr–Jun): 35–42°C in north India, 30–35°C in south.\n"
+            f"  Monsoon (Jul–Sep): heavy rain, 25–32°C.\n"
+            f"  Winter (Nov–Feb): 10–25°C across India.\n"
+            f"  Please check https://open-meteo.com for live forecasts."
         )
     except Exception as e:
         return f"Error fetching weather: {str(e)}"
