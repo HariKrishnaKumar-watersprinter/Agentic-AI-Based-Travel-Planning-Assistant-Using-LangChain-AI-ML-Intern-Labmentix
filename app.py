@@ -394,7 +394,7 @@ with tab2:
 
                 status.info("✈️ Searching flights...")
                 progress.progress(15)
-                flight_result = cached_search_flights(travel_date,t2_origin, t2_destination)
+                flight_result = cached_search_flights(t2_origin, t2_destination)
 
                 # Extract cheapest price
                 flight_price = 0.0
