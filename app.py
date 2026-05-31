@@ -136,33 +136,30 @@ CITIES = ["Delhi", "Mumbai", "Goa", "Bangalore", "Chennai",
 # ──────────────────────────────────────────────────────────────
 # Sidebar — Quick Tools
 # ──────────────────────────────────────────────────────────────
-with st.sidebar:
-    st.header("🔎 Quick Tools")
-    quick_city = st.selectbox("City", CITIES, index=2)
-    quick_max_budget = st.number_input("Max Price/Night (₹)", min_value=500,
-                                       max_value=10000, value=4000, step=500,
-                                       key="sidebar_budget")
+#with st.sidebar:
+   # st.header("🔎 Quick Tools")
+    #quick_city = st.selectbox("City", CITIES, index=2)
+  #  quick_max_budget = st.number_input("Max Price/Night (₹)", min_value=500,max_value=10000, value=4000, step=500,key="sidebar_budget")
 
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("🏨 Hotels"):
+   # col1, col2 = st.columns(2)
+    #with col1:
+      #  if st.button("🏨 Hotels"):
             # Cast to int — number_input returns float
-            st.session_state["quick_result"] = cached_recommend_hotels(
-                quick_city, int(quick_max_budget))
-    with col2:
-        if st.button("📍 Places"):
-            st.session_state["quick_result"] = cached_discover_places(quick_city)
+           # st.session_state["quick_result"] = cached_recommend_hotels(
+               # quick_city, int(quick_max_budget))
+  #  with col2:
+       # if st.button("📍 Places"):
+          #  st.session_state["quick_result"] = cached_discover_places(quick_city)
 
-    if "quick_result" in st.session_state:
-        st.text_area("Result", st.session_state["quick_result"], height=200)
+   #if "quick_result" in st.session_state:
+       # st.text_area("Result", st.session_state["quick_result"], height=200)
 
-    st.markdown("---")
-    st.markdown("**About this app**")
-    st.caption(
-        "Built with LangChain + Google Gemini AI.\n"
-        "Uses real datasets for flights, hotels & places.\n"
-        "Weather via Open-Meteo API."
-    )
+    #st.markdown("---")
+   # st.markdown("**About this app**")
+   # st.caption(
+       # "Built with LangChain + Google Gemini AI.\n"
+     #   "Uses real datasets for flights, hotels & places.\n"
+     #   "Weather via Open-Meteo API.")
 
 # ──────────────────────────────────────────────────────────────
 # Main Panel — Tab Layout
