@@ -128,16 +128,16 @@ def get_weather(query: str) -> str:
 
         end_date = start_date + datetime.timedelta(days=days - 1)
 
-        # Check if travel date is beyond Open-Meteo's forecast window
-        days_until_travel = (start_date - today).days
-        if days_until_travel > MAX_FORECAST_DAYS:
+        # Check if the requested range is in the past or beyond the 16-day forecast window.
+        # (end_date - today).days returns the offset; index 15 is the 16th day.
+        if start_date < today or (end_date - today).days >= MAX_FORECAST_DAYS:
             return _climate_fallback(city, start_date, days)
 
         coords = CITY_COORDINATES[city]
         url = (
             f"https://api.open-meteo.com/v1/forecast"
             f"?latitude={coords['lat']}&longitude={coords['lon']}"
-            f"&daily=temperature_2m_max,temperature_2m_min,weathercode,precipitation_probability_max"
+            f"&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max"
             f"&timezone=Asia/Kolkata"
             f"&start_date={start_date.isoformat()}"
             f"&end_date={end_date.isoformat()}"
@@ -151,7 +151,7 @@ def get_weather(query: str) -> str:
         dates        = daily.get("time", [])
         max_temps    = daily.get("temperature_2m_max", [])
         min_temps    = daily.get("temperature_2m_min", [])
-        weather_codes= daily.get("weathercode", [])
+        weather_codes= daily.get("weather_code", [])
         precip_probs = daily.get("precipitation_probability_max", [])
 
         if not dates:
@@ -191,5 +191,3 @@ def get_weather(query: str) -> str:
         )
     except Exception as e:
         return f"Error fetching weather: {str(e)}"
-
-
