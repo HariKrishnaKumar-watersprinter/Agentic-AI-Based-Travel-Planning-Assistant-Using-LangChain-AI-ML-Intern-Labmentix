@@ -88,9 +88,9 @@ def build_agent(verbose: bool = True) -> AgentExecutor:
         AgentExecutor ready to process travel queries.
     """
     # Initialize the Google Gemini LLM
-    api_key3='AIzaSyB-RlhWoRhR09UO86z_uk7zUY7dlh30J4Q'
-    api_key='32b3477efdef4eae98093e60429796f5.iD5LgyTDO1Pg88dV'
-    api_key2='fe530a38259c4de2bc506cf863512984.Mtfh8Sb2nsy97Sgb'
+    api_key3 = st.secrets['api_key3']
+    api_key = st.secrets['api_key']
+    api_key2 = st.secrets['api_key2']
     
     llm = ChatGoogleGenerativeAI(api_key=api_key3,model="gemini-2.5-flash")
 
@@ -112,7 +112,7 @@ def build_agent(verbose: bool = True) -> AgentExecutor:
         agent=agent,
         tools=ALL_TOOLS,
         verbose=verbose,
-        max_iterations=30,
+        max_iterations=40,
         handle_parsing_errors=True,
         return_intermediate_steps=True)
 
