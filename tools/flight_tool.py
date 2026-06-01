@@ -1,7 +1,7 @@
 # Assuming this is the content of your f:\Project\Labmantix\Agentic ai travel planer\files\tools\flight_tool.py
 
 import json
-from datetime import datetime
+import datetime
 from langchain.tools import tool
 import os
 
@@ -15,13 +15,15 @@ def search_flights(query: str) -> str:
     Input format: "FROM_CITY to TO_CITY to DATE"
     Example: "Delhi to Mumbai to 2026-06-15"
     """
+    Date = None
     try:
         parts = [c.strip() for c in query.split(" to ")]
         if len(parts) == 3:
             from_city, to_city, Date = parts
         elif len(parts) == 2:
             from_city, to_city = parts
-            Date = datetime.date.today()
+            # Default to today's date if not provided
+            Date = datetime.date.today().isoformat()
         else:
             raise ValueError
     except ValueError:
@@ -39,33 +41,32 @@ def search_flights(query: str) -> str:
     for flight in flights:
         if flight["from"].lower() == from_city.lower() and flight["to"].lower() == to_city.lower():
             matching_flights.append(flight)
-
+            
     if not matching_flights:
         return f"No direct flights found from {from_city} to {to_city}. You may need to book connecting flights through Mumbai, Bangalore, or other major airports."
-
+ 
     # Sort by price to find the cheapest
     matching_flights.sort(key=lambda x: x["price"])
 
     cheapest_flight = matching_flights[0]
 
     # Parse the datetime strings
-    departure_dt = datetime.fromisoformat(cheapest_flight["departure_time"])
-    arrival_dt = datetime.fromisoformat(cheapest_flight["arrival_time"])
+    departure_dt = datetime.datetime.fromisoformat(cheapest_flight["departure_time"])
+    arrival_dt = datetime.datetime.fromisoformat(cheapest_flight["arrival_time"])
 
-    # --- START OF MODIFICATION ---
     # Change the format string to only show time (e.g., "12:26 AM")
     formatted_departure_time = departure_dt.strftime("%I:%M %p")
     formatted_arrival_time = arrival_dt.strftime("%I:%M %p")
-    # --- END OF MODIFICATION ---
-
+    
+    
     result = (
-        f"✈️ Cheapest Flight from {from_city} to {to_city} \n\n"
-        f" - Flight Date : {Date}\n\n"
-        f" - Flight ID: {cheapest_flight['flight_id']}\n\n"
-        f" - Airline: {cheapest_flight['airline']}\n\n"
-        f" - Departure: {formatted_departure_time}\n\n"
-        f" - Arrival: {formatted_arrival_time}\n\n"
-        f" - Price: ₹{cheapest_flight['price']:,.0f}"
-       
-    )
+           f"✈️ Cheapest Flight from {from_city} to {to_city} \n\n"
+           f" - Flight Date : {Date}\n\n"
+           f" - Flight ID: {cheapest_flight['flight_id']}\n\n"
+           f" - Airline: {cheapest_flight['airline']}\n\n"
+           f" - Departure: {formatted_departure_time}\n\n"
+           f" - Arrival: {formatted_arrival_time}\n\n"
+           f" - Price: ₹{cheapest_flight['price']:,.0f}")
+   
+    
     return result
