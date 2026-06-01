@@ -108,7 +108,7 @@ travel_agent/
 
 ### Prerequisites
 - Python 3.9+
-- An Anthropic API key (for the Chat tab / agent.py)
+- An GLM API key (for the Chat tab / agent.py)
 
 ### Installation
 
