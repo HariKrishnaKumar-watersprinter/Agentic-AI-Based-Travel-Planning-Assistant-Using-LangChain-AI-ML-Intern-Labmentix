@@ -54,7 +54,7 @@ Produce your final response exactly in this structure:
 
 🏨 HOTEL RECOMMENDATION
 -----------------------
-[show all hotel details from tool for the distination cities also provide the recommendation ]
+[Directly insert the complete output from the recommend_hotels tool here, preserving its original formatting.follow this formatting strictly alos provide the recommendation from that ]
 
 📅 DAY-WISE ITINERARY
 ---------------------
