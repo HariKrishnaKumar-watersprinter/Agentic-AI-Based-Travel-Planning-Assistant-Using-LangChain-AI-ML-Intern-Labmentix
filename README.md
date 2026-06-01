@@ -1,5 +1,5 @@
 # ✈️ Agentic AI-Based Travel Planning Assistant
-Deployed Link : 
+Deployed Link : https://ai-travel-planner-assistant.streamlit.app/
 
 A fully autonomous AI travel planner for India built with **LangChain**, **GLM**, and **Streamlit**.
 
