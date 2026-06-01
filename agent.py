@@ -88,7 +88,7 @@ def build_agent(verbose: bool = True) -> AgentExecutor:
     Returns:
         AgentExecutor ready to process travel queries.
     """
-    # Initialize the Google Gemini LLM
+    # Initialize  LLM
     api_key3 = st.secrets['api_key3']
     api_key = st.secrets['api_key']
     api_key2 = st.secrets['api_key2']
