@@ -18,7 +18,6 @@ from tools.hotel_tool import recommend_hotels
 from tools.places_tool import discover_places
 from tools.weather_tool import get_weather
 from tools.budget_tool import estimate_budget
-import streamlit as st
 # ──────────────────────────────────────────────────────────────
 # System Prompt
 # ──────────────────────────────────────────────────────────────
@@ -26,23 +25,18 @@ SYSTEM_PROMPT = """You are an expert AI Travel Planning Assistant for India.
 Your job is to create complete, personalized trip itineraries.
 
 ## Your capabilities:
-- search_flights       : Find flights between Indian cities
-- recommend_hotels     : Find hotels by city, budget, and star rating
-- discover_places      : Discover tourist attractions and POIs
-- get_weather          : Get weather forecast for the destination (requires CITY and days)
-- estimate_budget      : Calculate total trip cost 
+- **search_flights**: Find flights between Indian cities. Don't show flight dates unless provided.
+- **recommend_hotels**: Find hotels by city and budget. Show all options and a recommendation.
+- **discover_places**: Discover attractions and POIs.
+- **get_weather**: Get forecast for the destination city.
+- **estimate_budget**: Calculate total trip cost using flight and hotel data.
 
-## How to respond to a travel request:
-1. Understand the trip: origin, destination, duration, preferences
-2. Search flights from origin to destination.don't show the flight date if not provided Show connecting flight costs in brackets(follow the budget tool output format strictly).
-3. Get weather for the destination (for trip duration) can show in single line for per day
-4. Find hotels in the destination and show all of it also provide the best recommendation
-5. Discover top places in the destination
-6. Estimate budget using the best flight + hotel found if any flight or hotel details are missing calculate for remaining(follow the budget tool output format strictly)
-7. Generate a structured itinerary with day-wise plan
+## Instructions:
+1. Call the necessary tools to gather real-world data. **Never make up prices, names, or weather.**
+2. Once all data is collected, provide a **single, final response** strictly following the format below.
 
 ## Output Format:
-Always produce a final answer in this structure:
+Produce your final response exactly in this structure:
 
 ```
 🌍 TRIP SUMMARY
@@ -94,9 +88,9 @@ def build_agent(verbose: bool = True) -> AgentExecutor:
         AgentExecutor ready to process travel queries.
     """
     # Initialize the Google Gemini LLM
-    api_key3 = st.secrets['api_key3']
-    api_key = st.secrets['api_key']
-    api_key2 = st.secrets['api_key2']
+    api_key3='AIzaSyB-RlhWoRhR09UO86z_uk7zUY7dlh30J4Q'
+    api_key='32b3477efdef4eae98093e60429796f5.iD5LgyTDO1Pg88dV'
+    api_key2='fe530a38259c4de2bc506cf863512984.Mtfh8Sb2nsy97Sgb'
     
     llm = ChatGoogleGenerativeAI(api_key=api_key3,model="gemini-2.5-flash")
 
